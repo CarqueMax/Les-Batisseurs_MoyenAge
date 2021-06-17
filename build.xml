@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="banner" name="Les Bâtisseurs : Moyen-Age ">
+    <description>
+        Build file of the projet.
+    </description>
+
+    <!-- Timestamp -->
+    <tstamp>
+        <format property="timestamp" pattern="HH.mm.ss-dd.MM.yyyy"  locale="fr,FR" />
+    </tstamp>
+
+    <!-- Global properties -->
+    <property name="testpackage" value="test"/>
+    <property name="mainfile" value="GameLauncher"/>
+    <property name="builddir" value="class"/>
+    <property name="srcdir" value="src"/>
+    <property name="jardir" value="jar"/>
+    <property name="datadir" value="data"/>
+    <property name="javadocdir" value="javaDoc"/>
+    <property name="verbosemode" value="true"/>
+    <property name="debuglevel" value="lines,vars,source"/>
+    <property name="encoding" value="UTF-8"/>
+    <property name="jarfile" value="${jardir}/${ant.project.name}_${timestamp}.jar"/>
+
+    <!-- Classpath -->
+    <path id="LesBatisseurs.classpath">
+        <pathelement location = "lib/junit-4.13.jar"/>
+        <pathelement location = "lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="${builddir}"/>
+    </path>
+
+    <!-- Show the banner -->
+    <target name="banner">
+        <echo message="Project: ${ant.project.name} (${ant.file})"/>
+        <echo message="ant home - Home folder of ANT"/>
+        <echo message="ant init - Create builds and javadoc directories"/>
+        <echo message="ant clean - Delete build folders"/>
+        <echo message="ant build - Build the project"/>
+        <echo message="ant javadoc - Generate javadoc"/>
+        <echo message="ant test - Test with JUnit"/>
+        <echo message="ant jar - Create the jar file"/>
+        <echo message="ant run - Run the program"/>
+    </target>
+
+    <!-- Home folder of ANT -->
+    <target name="home">
+        <echo message="Home: ${ant.home}"></echo>
+    </target>
+
+    <!-- Create builds and javadoc directories -->
+    <target name="init" depends="banner">
+        <mkdir dir="${builddir}"/>
+        <mkdir dir="${jardir}"/>
+        <mkdir dir="${javadocdir}"/>
+    </target>
+
+    <!-- Delete build folders -->
+    <target name="clean" depends="banner">
+        <delete verbose="${verbosemode}" dir="${builddir}"/>
+        <delete verbose="${verbosemode}" dir="${jardir}"/>
+    </target>
+
+    <!-- Build the project -->
+    <target name="build" depends="init">
+        <javac verbose="${verbosemode}" debug="true" debuglevel="${debuglevel}" includeantruntime="false" srcdir="${srcdir}" destdir="${builddir}">
+            <classpath refid="LesBatisseurs.classpath"/>
+        </javac>
+    </target>
+
+    <!-- Generate javadoc -->
+    <target name="javadoc" depends="init">
+        <javadoc author="true" private="true" version="true" sourcepath="${srcdir}" destdir="${javadocdir}" encoding="${encoding}"/>
+    </target>
+
+    <!-- Test with JUnit -->
+    <target name="test" depends="build">
+        <junit showoutput="true" printsummary="yes" fork="yes">
+            <formatter type="xml"/>
+            <classpath refid="LesBatisseurs.classpath"/>
+
+            <batchtest>
+                <fileset dir="${srcdir}/">
+                    <include name="${testpackage}/**/*Test*" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <!-- Create the jar file -->
+    <target name="jar" depends="build">
+        <jar destfile="${jarfile}" basedir="${builddir}">
+            <fileset dir="${datadir}"/>
+            <manifest>
+                <attribute name="Main-Class" value="${mainfile}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Run the program -->
+    <target name="run" depends="jar">
+        <java jar="${jarfile}" fork="true"/>
+    </target>
+
+</project>
