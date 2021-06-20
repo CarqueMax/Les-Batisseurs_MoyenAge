@@ -1,39 +1,45 @@
 package game;
 
+import java.util.Scanner;
+
 /**
  * "Building" card of the game
- * @version 1.0
+ *
  * @author CHARGÉ Maxime - IUT Vannes
+ * @version 1.0
  */
 public class Building extends Cards {
+    private int point;
 
-	private int point;
+    /**
+     * Building constructor
+     *
+     * @param scanOfBoard Board class scanner that reads the file
+     */
+    public Building(Scanner scanOfBoard) {
+        super(scanOfBoard);
+        this.point = scanOfBoard.nextInt();
+    }
 
-	/**
-	 * Building constructor
-	 * @param stone Quantity of stone required for this building
-	 * @param wood Quantity of wood required for this building
-	 * @param knowledge Quantity of knowledge required for this building
-	 * @param tile Quantity of tile required for this building
-	 * @param cost Amount of money the player earns after the Building is finished constructing
-	 * @param point Number of points the player earns after the Building is finished constructing
-	 */
-	public Building(int stone, int wood, int knowledge, int tile, int cost, int point) {}
+    /**
+     * Change the value of the building points
+     *
+     * @param point Point of the building to put
+     */
+    public void setPoint(int point) {
+        if (point >= 0) {
+            this.point = point;
+        } else {
+            System.err.println("ERREUR setPoint : valeur de point inférieur à 0");
+        }
+    }
 
-	/**
-	 * Change the value of the building points
-	 * @param point Point of the building to put
-	 */
-	public void setPoint(int point) {
-		this.point = point;
-	}
-
-	/**
-	 * Return the number of points of the building
-	 * @return Number of points
-	 */
-	public int getPoint() {
-		return this.point;
-	}
-
+    /**
+     * Return the number of points of the building
+     *
+     * @return Number of points
+     */
+    public int getPoint() {
+        return this.point;
+    }
 }
