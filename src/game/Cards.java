@@ -23,7 +23,7 @@ public abstract class Cards {
      */
     public Cards(Scanner scanOfBoard) {
         if (scanOfBoard != null) {
-            this.name = scanOfBoard.next();
+            this.name = scanOfBoard.nextLine();
             this.cost = scanOfBoard.nextInt();
             this.stone = scanOfBoard.nextInt();
             this.wood = scanOfBoard.nextInt();

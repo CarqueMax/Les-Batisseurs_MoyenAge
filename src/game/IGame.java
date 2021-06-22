@@ -9,18 +9,17 @@ public interface IGame {
 
 	/**
 	 * View game rules and card statistics
-	 * @return rules, statistics
 	 */
-	public String desciption();
+	void description();
 
 	/**
 	 * Start the game part
 	 */
-	public void start();
+	void start();
 
 	/**
 	 * End of the game, announces the winner and the statistics of the game
 	 */
-	public void endOfGame();
+	void endOfGame();
 
 }

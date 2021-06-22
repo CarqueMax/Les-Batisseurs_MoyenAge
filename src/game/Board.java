@@ -56,9 +56,8 @@ public class Board {
         try {
             this.sc = new Scanner(new FileReader(fileName));
             this.sc.useDelimiter(":");
-            while (this.sc.hasNextLine()) {
+            while (this.sc.hasNext()) {
                 char type = sc.next().charAt(0);
-                String name = sc.next();
                 if (type == 'W') {
                     Worker workerCard = new Worker(this.sc);
                     this.pileWorkers.add(workerCard);
@@ -97,6 +96,7 @@ public class Board {
 
     /**
      * Retrieve a construction site among the proposed constrcution sites and put a card back in the construction site line
+     *
      * @param indexOfConstruction Index of the construction site in the list
      * @return Card chosen by the user
      */
@@ -119,6 +119,7 @@ public class Board {
 
     /**
      * Retrieve a worker among the proposed workers and put a card back in the workers line
+     *
      * @param indexOfWorker Index of the worker in the list
      * @return Card chosen by the user
      */
@@ -151,5 +152,13 @@ public class Board {
         Apprentice apprenticeOfPlayer = this.pileApprentice.get(random);
         this.pileApprentice.remove(random);
         return apprenticeOfPlayer;
+    }
+
+    public ArrayList<Cards> getBuildingsOutside() {
+        return this.buildingsOutside;
+    }
+
+    public ArrayList<Cards> getWorkersOutside() {
+        return this.workersOutside;
     }
 }
