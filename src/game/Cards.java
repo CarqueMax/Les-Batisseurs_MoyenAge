@@ -1,5 +1,6 @@
 package game;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -21,17 +22,27 @@ public abstract class Cards {
      *
      * @param scanOfBoard Board class scanner that reads the file
      */
-    public Cards(Scanner scanOfBoard) {
-        if (scanOfBoard != null) {
-            this.name = scanOfBoard.nextLine();
-            this.cost = scanOfBoard.nextInt();
-            this.stone = scanOfBoard.nextInt();
-            this.wood = scanOfBoard.nextInt();
-            this.knowledge = scanOfBoard.nextInt();
-            this.tile = scanOfBoard.nextInt();
-        } else {
-            System.err.println("ERREUR Cards : arguments null");
+    public Cards(Scanner scanOfBoard) throws FileNotFoundException {
+        try {
+            if (scanOfBoard != null) {
+                this.name = scanOfBoard.next();
+                this.cost = scanOfBoard.nextInt();
+                this.stone = scanOfBoard.nextInt();
+                this.wood = scanOfBoard.nextInt();
+                this.knowledge = scanOfBoard.nextInt();
+                this.tile = scanOfBoard.nextInt();
+            } else {
+                System.err.println("ERREUR Cards : arguments null");
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
+    }
+
+    /**
+     * Cards constructor
+     */
+    public Cards() {
     }
 
     /**
@@ -86,5 +97,18 @@ public abstract class Cards {
      */
     public int getTile() {
         return this.tile;
+    }
+
+    /**
+     * Change the value of the cost
+     *
+     * @param cost Cost of the card to put
+     */
+    public void setCost(int cost) {
+        if (cost >= 0) {
+            this.cost = cost;
+        } else {
+            System.err.println("ERREUR setCost : valeur du cout inférieur à 0");
+        }
     }
 }

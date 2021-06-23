@@ -46,6 +46,7 @@ public class Game implements IGame {
         this.playerList = new ArrayList<>();
         this.board = new Board();
         createPlayer(playerNameList, difficultyOfRobot, numberHuman, numberRobot);
+        distributeMoney();
     }
 
     /**
@@ -67,6 +68,17 @@ public class Game implements IGame {
             AutoPlayer APlayer = new AutoPlayer(playerNameList.get(indexNamePlayer), this.board, this.board.randomDetributeApprentices(), difficultyOfRobot.get(i));
             this.playerList.add(APlayer);
             indexNamePlayer++;
+        }
+        this.board.assembleWorker();
+    }
+
+    /**
+     * Distribute ecus to the players at the start of the game
+     */
+    public void distributeMoney() {
+        for (int i = 0; i < this.playerList.size(); i++) {
+            this.playerList.get(i).setEcu(10);
+            this.board.setEcuReserve(this.board.getEcuReserve() - 10);
         }
     }
 
@@ -97,6 +109,24 @@ public class Game implements IGame {
         return winner;
     }
 
+    /**
+     * Give the winning player
+     *
+     * @return the winner
+     */
+    public Player getWinner() {
+        Player winnerPlayer = null;
+        for (int i = 0; i < this.playerList.size(); i++) {
+            if (this.playerList.get(i).getVictoryPoint() >= 17) {
+                winnerPlayer = this.playerList.get(i);
+            }
+        }
+        return winnerPlayer;
+    }
+
+    /**
+     * First player's draw
+     */
     public void firstPlayerDraw() {
         Random random = new Random();
         this.currentPlayerId = random.nextInt(this.playerList.size() - 1);
@@ -106,7 +136,7 @@ public class Game implements IGame {
     /**
      * View game rules and card statistics
      */
-    public void description() {
+    public void description() throws IllegalArgumentException {
         if (Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
             try {
                 Desktop.getDesktop().open(new File("../../data/LES-BATISSEURS_MOYEN-AGE_rulebook_FR.pdf"));
@@ -120,7 +150,7 @@ public class Game implements IGame {
      * Start the game part
      */
     public void start() {
-        description();
+        //description();
         firstPlayerDraw();
         while (checkScore()) {
             currentPlayer.play();
@@ -133,5 +163,6 @@ public class Game implements IGame {
      * End of the game, announces the winner and the statistics of the game
      */
     public void endOfGame() {
+        System.out.println("Bravo au joueur " + getWinner().getName() + " qui remporte la partie avec " + getWinner().getVictoryPoint() + " points de victoire !!!");
     }
 }

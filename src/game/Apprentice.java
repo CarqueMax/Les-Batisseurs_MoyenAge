@@ -1,5 +1,6 @@
 package game;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -14,7 +15,7 @@ public class Apprentice extends Worker {
      *
      * @param scanOfBoard Board class scanner that reads the file
      */
-    public Apprentice(Scanner scanOfBoard) {
+    public Apprentice(Scanner scanOfBoard) throws FileNotFoundException {
         super(scanOfBoard);
     }
 }

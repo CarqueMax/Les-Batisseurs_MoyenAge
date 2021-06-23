@@ -11,8 +11,6 @@ import java.util.ArrayList;
 public abstract class Player {
     protected String name;
     protected int ecu;
-    protected int silverCoin;
-    protected int goldenCoin;
     protected int action;
     protected int victoryPoint;
     protected Board board;
@@ -34,8 +32,9 @@ public abstract class Player {
             this.name = name;
             this.board = board;
             this.listWorkerCard = new ArrayList<>();
-            addCardToListWorkerCard(firstCard);
+            this.listBuildingCard = new ArrayList<>();
             this.listeConstruction = new ArrayList<>();
+            addCardToListWorkerCard(firstCard);
         } else {
             System.err.println("ERREUR Player : arguments null");
         }
@@ -45,6 +44,10 @@ public abstract class Player {
      * The player plays and can do different actions
      */
     public abstract void play();
+
+    public String getName() {
+        return this.name;
+    }
 
     /**
      * Change the number of ecu
@@ -69,50 +72,6 @@ public abstract class Player {
     }
 
     /**
-     * Change the number of silverCoin
-     *
-     * @param silverCoin New silverCoin number
-     */
-    public void setSilverCoin(int silverCoin) {
-        if (silverCoin >= 0) {
-            this.silverCoin = silverCoin;
-        } else {
-            System.err.println("ERREUR setSilverCoin : nouvelle valeur inférieur à 0");
-        }
-    }
-
-    /**
-     * Recover the player's silverCoin number
-     *
-     * @return The player's silverCoin number
-     */
-    public int getSilverCoin() {
-        return this.silverCoin;
-    }
-
-    /**
-     * Change the number of goldenCoin
-     *
-     * @param goldenCoin New goldenCoin number
-     */
-    public void setGoldenCoin(int goldenCoin) {
-        if (goldenCoin >= 0) {
-            this.goldenCoin = goldenCoin;
-        } else {
-            System.err.println("ERREUR setGoldenCoin : nouvelle valeur inférieur à 0");
-        }
-    }
-
-    /**
-     * Recover the player's goldenCoin number
-     *
-     * @return The player's goldenCoin number
-     */
-    public int getGoldenCoin() {
-        return this.goldenCoin;
-    }
-
-    /**
      * Change the number of action
      *
      * @param action New action number
@@ -126,31 +85,47 @@ public abstract class Player {
     }
 
     /**
+     * Recover the number of action
+     *
+     * @return Number of action
+     */
+    public int getAction() {
+        return this.action;
+    }
+
+    /**
      * Convert action into ecu (1 action = 1 ecu, 2 action = 3 ecu, 3 action = 6 ecu)
      */
     public void actionToEcu() {
-        if (actionSaleCounter == 0) {
+        if (this.actionSaleCounter == 0) {
             setAction(this.action - 1);
             setEcu(this.ecu + 1);
-            actionSaleCounter++;
-            System.out.println("Lors de ce tour, vous avez vendu 1 action contre 1 ecu");
-        } else if (actionSaleCounter == 1) {
+            this.actionSaleCounter++;
+            System.out.println(" => Lors de ce tour, vous avez vendu 1 action contre 1 ecu");
+        } else if (this.actionSaleCounter == 1) {
             setAction(this.action - 1);
             setEcu(this.ecu + 2);
-            actionSaleCounter++;
-            System.out.println("Lors de ce tour, vous avez vendu 2 actions contre 3 ecus");
-        } else if (actionSaleCounter == 2) {
+            this.actionSaleCounter++;
+            System.out.println(" => Lors de ce tour, vous avez vendu 2 actions contre 3 ecus");
+        } else if (this.actionSaleCounter == 2) {
             setAction(this.action - 1);
             setEcu(this.ecu + 3);
-            actionSaleCounter++;
-            System.out.println("Lors de ce tour, vous avez vendu 3 actions contre 6 ecus");
+            this.actionSaleCounter++;
+            System.out.println(" => Lors de ce tour, vous avez vendu 3 actions contre 6 ecus");
         } else {
-            System.err.println("Vous ne pouvez pas vendre plus de 3 actions par tour");
+            System.err.println("/!\\ Vous ne pouvez pas vendre plus de 3 actions par tour /!\\");
         }
     }
 
     /**
-     * Convert ecu into action (1 action = 5 ecus)
+     * Resets the action sale counter to 0
+     */
+    public void resetActionSaleCounter() {
+        this.actionSaleCounter = 0;
+    }
+
+    /**
+     * Convert ecu into action (5 ecus = 1 action)
      */
     public void buyAction(int numberAction) {
         if (numberAction > 0) {
@@ -158,24 +133,16 @@ public abstract class Player {
             if (costBuyAction <= this.ecu) {
                 setEcu(this.ecu - costBuyAction);
                 setAction(this.action + numberAction);
-                System.out.println("Vous avez maintenant " + this.action + " action(s) et " + this.ecu + " ecu(s)");
+                System.out.println(" => Vous avez maintenant " + this.action + " action(s) et " + this.ecu + " ecu(s)");
             } else {
-                System.err.println("ERREUR buyAction : pas assez d'écu pour acheter des actions");
+                int maxAction = this.ecu / 5;
+                System.err.println("/!\\ Vous n'avez assez d'écu pour acheter des actions /!\\ \n" +
+                        "Vous pouvez acheter maximum " + maxAction + " ecu(s) avec vos écus"
+                );
             }
         } else {
-            System.err.println("ERREUR buyAction : nombre inférieur ou égal à 0");
+            System.err.println("/!\\ Entrer une valeur supérieur à 0 /!\\");
         }
-    }
-
-    /**
-     * Convert money (silver and gold coin) into ecu (1 silverCoin = 1 ecu, 1 goldenCoin = 5 ecus)
-     */
-    public void coinToEcu() {
-        int numberOfEcu = this.silverCoin + (this.goldenCoin * ECU_EXCHANGE_PRICE);
-        setSilverCoin(0);
-        setGoldenCoin(0);
-        setEcu(this.ecu + numberOfEcu);
-        System.out.println("Transfer de vos pièces en ecus");
     }
 
     /**
@@ -228,11 +195,12 @@ public abstract class Player {
      * @param indexOfConstruction The index of the construction site to be opened among the proposed construction sites
      */
     public void openConstruction(int indexOfConstruction) {
-        if (indexOfConstruction >= 0 && indexOfConstruction <= 4) {
+        if (indexOfConstruction >= 0 && indexOfConstruction < this.board.getBuildingsOutside().size()) {
             Construction construction = new Construction(this.board.takeConstruction(indexOfConstruction));
             this.listeConstruction.add(construction);
+            setAction(this.action - 1);
         } else {
-            System.err.println("ERREUR openConstruction : index de la carte choisi en dehors du tableau");
+            System.err.println("/!\\ Aucun chantier trouvé avec l'index saisie /!\\");
         }
     }
 
@@ -242,10 +210,11 @@ public abstract class Player {
      * @param indexOfWorker The index of the worker to be recruited among the proposed workers
      */
     public void recruitWorker(int indexOfWorker) {
-        if (indexOfWorker >= 0 && indexOfWorker <= 4) {
+        if (indexOfWorker >= 0 && indexOfWorker <= this.board.getWorkersOutside().size()) {
             this.listWorkerCard.add(this.board.takeWorker(indexOfWorker));
+            setAction(this.action - 1);
         } else {
-            System.err.println("ERREUR recruitWorker : index de la carte choisi en dehors du tableau");
+            System.err.println("/!\\ Aucun ouvrier trouvé avec l'index saisie /!\\");
         }
     }
 
@@ -259,11 +228,12 @@ public abstract class Player {
         if (indexOfWorkerToSend >= 0 && indexOfWorkerToSend < this.listWorkerCard.size() && indexOfConstruction >= 0 && indexOfConstruction < this.listeConstruction.size()) {
             if (!this.listeConstruction.get(indexOfConstruction).calculateProgress()) {
                 this.listeConstruction.get(indexOfConstruction).addWorker(this.listWorkerCard.get(indexOfWorkerToSend));
+                setAction(this.action - 1);
             } else {
-                System.err.println("Ce chantier est déjà fini, vous ne pouvez pas rajouter d'ouvrier");
+                System.err.println("/!\\ Ce chantier est déjà fini, vous ne pouvez pas rajouter d'ouvrier /!\\");
             }
         } else {
-            System.err.println("ERREUR sendworker : index en dehors des tableaux");
+            System.err.println("/!\\ Aucun ouvrier et/ou chantier trouvé avec l'index saisie /!\\");
         }
     }
 
@@ -281,16 +251,19 @@ public abstract class Player {
     }
 
     /**
-     * Resets the action sale counter to 0
+     * Display player information
+     *
+     * @return String of characters
      */
-    public void resetActionSaleCounter() {
-        this.actionSaleCounter = 0;
-    }
-
     public String displayInfoPlayer() {
         return "=== " + this.ecu + " écu(s) | " + this.action + " action | " + this.victoryPoint + " point(s) de victoire";
     }
 
+    /**
+     * Display player workers
+     *
+     * @return String of characters
+     */
     public String displayListWorkerCards() {
         String ret = "===== VOS OUVRIERS =====\n";
         if (this.listWorkerCard.size() == 0) {
@@ -311,6 +284,11 @@ public abstract class Player {
         return ret;
     }
 
+    /**
+     * Display player buildings
+     *
+     * @return String of characters
+     */
     public String displayListBuildingCards() {
         String ret = "===== VOS BATIMENTS =====\n";
         if (this.listBuildingCard.size() == 0) {
@@ -332,6 +310,11 @@ public abstract class Player {
         return ret;
     }
 
+    /**
+     * Display player construction sites
+     *
+     * @return String of characters
+     */
     public String displayListConstruction() {
         String ret = "===== VOS CHANTIERS =====\n";
         if (this.listeConstruction.size() == 0) {
@@ -353,6 +336,11 @@ public abstract class Player {
         return ret;
     }
 
+    /**
+     * Show buildings to draw
+     *
+     * @return String of characters
+     */
     public String displayBuildingsOutside() {
         String ret = "=== BATIMENTS DISPOS ===\n";
         if (this.board.getBuildingsOutside().size() == 0) {
@@ -374,6 +362,11 @@ public abstract class Player {
         return ret;
     }
 
+    /**
+     * Show workers to draw
+     *
+     * @return String of characters
+     */
     public String displayWorkersOutside() {
         String ret = "=== OUVRIERS DISPOS ===\n";
         if (this.board.getWorkersOutside().size() == 0) {

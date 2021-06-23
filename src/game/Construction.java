@@ -1,6 +1,5 @@
 package game;
 
-
 import java.util.ArrayList;
 
 /**
@@ -33,6 +32,10 @@ public class Construction {
         }
     }
 
+    public boolean getProgress() {
+        return this.progress;
+    }
+
     /**
      * Checks if all resources are reached
      *
@@ -55,7 +58,7 @@ public class Construction {
     private boolean calcutaleStone() {
         boolean ret = false;
         for (int i = 0; i < this.constructionWorkers.size() && !ret; i++) {
-            this.stone = this.stone + this.constructionWorkers.get(i).getStone();
+            this.stone += this.constructionWorkers.get(i).getStone();
             if (this.stone >= this.itemToBuild.getStone()) {
                 ret = true;
             }
@@ -71,7 +74,7 @@ public class Construction {
     private boolean calculateWood() {
         boolean ret = false;
         for (int i = 0; i < this.constructionWorkers.size() && !ret; i++) {
-            this.wood = this.wood + this.constructionWorkers.get(i).getWood();
+            this.wood += this.constructionWorkers.get(i).getWood();
             if (this.wood >= this.itemToBuild.getWood()) {
                 ret = true;
             }
@@ -87,7 +90,7 @@ public class Construction {
     private boolean calculateKnowledge() {
         boolean ret = false;
         for (int i = 0; i < this.constructionWorkers.size() && !ret; i++) {
-            this.knowledge = this.knowledge + this.constructionWorkers.get(i).getKnowledge();
+            this.knowledge += this.constructionWorkers.get(i).getKnowledge();
             if (this.knowledge >= this.itemToBuild.getKnowledge()) {
                 ret = true;
             }
@@ -103,7 +106,7 @@ public class Construction {
     private boolean calcutaleTile() {
         boolean ret = false;
         for (int i = 0; i < this.constructionWorkers.size() && !ret; i++) {
-            this.tile = this.tile + this.constructionWorkers.get(i).getTile();
+            this.tile += this.constructionWorkers.get(i).getTile();
             if (this.tile >= this.itemToBuild.getTile()) {
                 ret = true;
             }
@@ -124,6 +127,11 @@ public class Construction {
         }
     }
 
+    /**
+     * Return the building under construction
+     *
+     * @return A Building
+     */
     public Cards getItemToBuild() {
         return this.itemToBuild;
     }

@@ -2,11 +2,12 @@ package game;
 
 /**
  * Contains the different difficulties of the autoplayer
- * @version 1.0
+ *
  * @author CHARGÉ Maxime - IUT Vannes
+ * @version 1.0
  */
 public enum Difficulties {
-	EASY,
-	MEDIUM,
-	HARD
+    EASY,
+    MEDIUM,
+    HARD
 }

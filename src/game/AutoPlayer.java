@@ -1,6 +1,5 @@
 package game;
 
-import javax.swing.plaf.basic.BasicBorders;
 import java.util.Random;
 
 /**
@@ -35,7 +34,43 @@ public class AutoPlayer extends Player {
      * The autoplayer plays and can do different actions
      */
     public void play() {
+        this.action += 3;
+        while (this.action > 0) {
+            int choiceNumber = this.random.nextInt(7);
 
+            switch (choiceNumber) {
+                case 0: // Recruter un nouvelle ouvrier
+                    int choiceWorker = this.random.nextInt(this.board.getWorkersOutside().size() - 1);
+                    recruitWorker(choiceWorker);
+                    break;
+                case 1: // Envoyer un ouvrier sur un chantier
+                    choiceWorker = this.random.nextInt(this.listBuildingCard.size() - 1);
+                    int choiceConstruction = this.random.nextInt(this.listBuildingCard.size() - 1);
+                    sendworker(choiceWorker, choiceConstruction);
+                    break;
+                case 2: // Ouvrir un nouveau chantier
+                    choiceConstruction = this.random.nextInt(this.board.getBuildingsOutside().size() - 1);
+                    openConstruction(choiceConstruction);
+                    break;
+                case 3: // Echanger une action contre des écus
+                    actionToEcu();
+                    break;
+                case 4: // Acheter une action
+                    System.out.println("Entrer le nombre d'action que vous souhaitez acheter :");
+                    int numberOfAction = this.random.nextInt(5);
+                    buyAction(numberOfAction);
+                    break;
+                case 5: // Passer son tour
+                    break;
+                case 6: // Sauvegarder la partie
+                    System.err.println("Pas encore de sauvegarde dispo");
+                    break;
+                case 7: // Quitter la partie
+                    System.exit(1);
+                    break;
+            }
+        }
+        resetActionSaleCounter();
     }
 
     /**

@@ -27,110 +27,122 @@ public class HumanPlayer extends Player {
      * The human player plays and can do different actions
      */
     public void play() {
-        System.out.println(displayInfoPlayer());
-        System.out.println(displayListWorkerCards());
-        System.out.println(displayListBuildingCards());
-        System.out.println(displayListConstruction());
-        System.out.println("""
-                Actions possible :
-                0. Recruter un nouvelle ouvrier
-                1. Envoyer un ouvrier sur un chantier
-                2. Ouvrir un nouveau chantier
-                3. Echanger une action contre des écus
-                4. Acheter une action
+        this.action += 3;
+        while (this.action > 0) {
+            System.out.println(displayInfoPlayer());
+            System.out.println(displayListWorkerCards());
+            System.out.println(displayListBuildingCards());
+            System.out.println(displayListConstruction());
+            System.out.println(displayWorkersOutside());
+            System.out.println(displayBuildingsOutside());
+            System.out.println("" +
+                    "0. Recruter un nouvelle ouvrier (coute 1 action)\n" +
+                    "1. Envoyer un ouvrier sur un chantier (coute 1 action)\n" +
+                    "2. Ouvrir un nouveau chantier (coute 1 action)\n" +
+                    "3. Echanger une action contre des écus\n" +
+                    "4. Acheter une action\n" +
+                    "5. Passer son tour\n" +
+                    "6. Sauvegarder la partie\n" +
+                    "7. Quitter la partie"
+            );
 
-                5. Passer son tour
-                6. Sauvegarder la partie
-                7. Quitter la partie
-                """
-        );
+            int choiceNumber = 0;
+            do {
+                System.out.print("Entrer une valeur :");
+                if (this.scan.hasNextInt()) {
+                    choiceNumber = this.scan.nextInt();
+                } else {
+                    this.scan.next();
+                    System.err.println("Entrer un nombre entier, recommencez :");
+                }
+            } while (choiceNumber < 0 || choiceNumber > 7);
 
-        int choiceNumber = 0;
-        do {
-            System.out.print("Entrer une valeur : ");
-            if (this.scan.hasNextInt()) {
-                choiceNumber = this.scan.nextInt();
-            } else {
-                this.scan.next();
-                System.err.println("Entrer un nombre entier");
+            switch (choiceNumber) {
+                case 0: // Recruter un nouvelle ouvrier
+                    System.out.println("Entrer le numéro de l'ouvrier à recruter :");
+                    int choiceWorker = 0;
+                    boolean quit = false;
+                    do {
+                        if (this.scan.hasNextInt()) {
+                            choiceWorker = this.scan.nextInt();
+                            quit = true;
+                        } else {
+                            this.scan.next();
+                            System.err.println("Entrer un nombre entier, recommencez :");
+                        }
+                    } while (!quit);
+                    recruitWorker(choiceWorker);
+                    break;
+                case 1: // Envoyer un ouvrier sur un chantier
+                    System.out.println("Entrer le numéro de l'ouvrier à envoyer en chantier :");
+                    choiceWorker = 0;
+                    quit = false;
+                    do {
+                        if (this.scan.hasNextInt()) {
+                            choiceWorker = this.scan.nextInt();
+                            quit = true;
+                        } else {
+                            this.scan.next();
+                            System.err.println("Entrer un nombre entier, recommencez :");
+                        }
+                    } while (!quit);
+                    System.out.println("Entrer le numéro du chantier sur lequel vous allez envoyer un ouvrier :");
+                    int choiceConstruction = 0;
+                    quit = false;
+                    do {
+                        if (this.scan.hasNextInt()) {
+                            choiceConstruction = this.scan.nextInt();
+                            quit = true;
+                        } else {
+                            this.scan.next();
+                            System.err.println("Entrer un nombre entier, recommencez :");
+                        }
+                    } while (!quit);
+                    sendworker(choiceWorker, choiceConstruction);
+                    break;
+                case 2: // Ouvrir un nouveau chantier
+                    System.out.println("Entrer le numéro du chantier que vous souhaitez ouvrir :");
+                    choiceConstruction = 0;
+                    quit = false;
+                    do {
+                        if (this.scan.hasNextInt()) {
+                            choiceConstruction = this.scan.nextInt();
+                            quit = true;
+                        } else {
+                            this.scan.next();
+                            System.err.println("Entrer un nombre entier, recommencez :");
+                        }
+                    } while (!quit);
+                    openConstruction(choiceConstruction);
+                    break;
+                case 3: // Echanger une action contre des écus
+                    actionToEcu();
+                    break;
+                case 4: // Acheter une action
+                    System.out.println("Entrer le nombre d'action que vous souhaitez acheter :");
+                    int numberOfAction = 0;
+                    quit = false;
+                    do {
+                        if (this.scan.hasNextInt()) {
+                            numberOfAction = this.scan.nextInt();
+                            quit = true;
+                        } else {
+                            this.scan.next();
+                            System.err.println("Entrer un nombre entier, recommencez :");
+                        }
+                    } while (!quit);
+                    buyAction(numberOfAction);
+                    break;
+                case 5: // Passer son tour
+                    break;
+                case 6: // Sauvegarder la partie
+                    System.err.println("Pas encore de sauvegarde dispo");
+                    break;
+                case 7: // Quitter la partie
+                    System.exit(1);
+                    break;
             }
-        } while (choiceNumber < 0 || choiceNumber > 7);
-
-        switch (choiceNumber) {
-            case 0: // Recruter un nouvelle ouvrier
-                System.out.println(displayWorkersOutside());
-                int choiceWorker = 0;
-                do {
-                    if (this.scan.hasNextInt()) {
-                        choiceWorker = this.scan.nextInt();
-                    } else {
-                        this.scan.next();
-                        System.err.println("Entrer un nombre entier");
-                    }
-                } while (choiceWorker < 0 || choiceWorker >= this.board.getWorkersOutside().size());
-                recruitWorker(choiceWorker);
-                break;
-            case 1: // Envoyer un ouvrier sur un chantier
-                System.out.println(displayListWorkerCards());
-                System.out.println(displayListConstruction());
-                choiceWorker = 0;
-                do {
-                    if (this.scan.hasNextInt()) {
-                        choiceWorker = this.scan.nextInt();
-                    } else {
-                        this.scan.next();
-                        System.err.println("Entrer un nombre entier");
-                    }
-                } while (choiceWorker < 0 || choiceWorker >= this.listWorkerCard.size());
-                int choiceConstruction = 0;
-                do {
-                    if (this.scan.hasNextInt()) {
-                        choiceConstruction = this.scan.nextInt();
-                    } else {
-                        this.scan.next();
-                        System.err.println("Entrer un nombre entier");
-                    }
-                } while (choiceConstruction < 0 || choiceConstruction >= this.listeConstruction.size());
-                sendworker(choiceWorker, choiceConstruction);
-                break;
-            case 2: // Ouvrir un nouveau chantier
-                System.out.println(displayBuildingsOutside());
-                choiceConstruction = 0;
-                do {
-                    if (this.scan.hasNextInt()) {
-                        choiceConstruction = this.scan.nextInt();
-                    } else {
-                        this.scan.next();
-                        System.err.println("Entrer un nombre entier");
-                    }
-                } while (choiceConstruction < 0 || choiceConstruction >= this.board.getBuildingsOutside().size());
-                openConstruction(choiceConstruction);
-                break;
-            case 3: // Echanger une action contre des écus
-                actionToEcu();
-                break;
-            case 4: // Acheter une action
-                int numberOfAcion = 0;
-                do {
-                    if (this.scan.hasNextInt()) {
-                        numberOfAcion = this.scan.nextInt();
-                    } else {
-                        this.scan.next();
-                        System.err.println("Entrer un nombre entier");
-                    }
-                } while (numberOfAcion <= 0);
-                buyAction(numberOfAcion);
-                break;
-            case 5: // Passer son tour
-                break;
-            case 6: // Sauvegarder la partie
-                //..
-                break;
-            case 7: // Quitter la partie
-                //..
-                break;
         }
         resetActionSaleCounter();
-        coinToEcu();
     }
 }

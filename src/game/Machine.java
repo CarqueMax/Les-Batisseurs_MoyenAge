@@ -9,6 +9,12 @@ import java.util.Scanner;
  * @version 1.0
  */
 public class Machine extends Cards {
+    private String name;
+    private int cost;
+    private int stone;
+    private int wood;
+    private int knowledge;
+    private int tile;
     private int point;
     private int stoneToBuild;
     private int woodToBuild;
@@ -20,26 +26,27 @@ public class Machine extends Cards {
      *
      * @param scanOfBoard Board class scanner that reads the file
      */
-    public Machine(Scanner scanOfBoard) {
-        super(scanOfBoard);
-        this.point = scanOfBoard.nextInt();
-        this.stoneToBuild = scanOfBoard.nextInt();
-        this.woodToBuild = scanOfBoard.nextInt();
-        this.knowledgeToBuild = scanOfBoard.nextInt();
-        this.tileToBuild = scanOfBoard.nextInt();
+    public Machine(Scanner scanOfBoard) throws IllegalArgumentException {
+        if (scanOfBoard != null) {
+            this.name = scanOfBoard.next();
+            this.cost = scanOfBoard.nextInt();
+            this.stone = scanOfBoard.nextInt();
+            this.wood = scanOfBoard.nextInt();
+            this.knowledge = scanOfBoard.nextInt();
+            this.tile = scanOfBoard.nextInt();
+            this.point = scanOfBoard.nextInt();
+            this.stoneToBuild = scanOfBoard.nextInt();
+            this.woodToBuild = scanOfBoard.nextInt();
+            this.knowledgeToBuild = scanOfBoard.nextInt();
+            this.tileToBuild = scanOfBoard.nextInt();
+        }
     }
 
     /**
-     * Change the value of the machine points
-     *
-     * @param point Point of the machine to put
+     * Sets the cost of the card to 0
      */
-    public void setPoint(int point) {
-        if (point >= 0) {
-            this.point = point;
-        } else {
-            System.err.println("ERREUR setPoint : valeur de point inférieur à 0");
-        }
+    public void setCostNull() {
+        setCost(0);
     }
 
     /**

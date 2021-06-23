@@ -1,5 +1,6 @@
 package game;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -16,22 +17,9 @@ public class Building extends Cards {
      *
      * @param scanOfBoard Board class scanner that reads the file
      */
-    public Building(Scanner scanOfBoard) {
+    public Building(Scanner scanOfBoard) throws FileNotFoundException {
         super(scanOfBoard);
         this.point = scanOfBoard.nextInt();
-    }
-
-    /**
-     * Change the value of the building points
-     *
-     * @param point Point of the building to put
-     */
-    public void setPoint(int point) {
-        if (point >= 0) {
-            this.point = point;
-        } else {
-            System.err.println("ERREUR setPoint : valeur de point inférieur à 0");
-        }
     }
 
     /**

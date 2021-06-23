@@ -13,8 +13,7 @@ import java.util.Scanner;
  * @version 1.0
  */
 public class Board {
-    private int silverReserve;
-    private int goldReserve;
+    private int ecuReserve;
     private ArrayList<Cards> pileBuildings;
     private ArrayList<Cards> buildingsOutside;
     private ArrayList<Cards> pileWorkers;
@@ -27,24 +26,36 @@ public class Board {
      * Board construtor
      */
     public Board() {
-        this.silverReserve = 25;
-        this.goldReserve = 15;
+        this.ecuReserve = 100;
         this.pileBuildings = new ArrayList<>();
         this.buildingsOutside = new ArrayList<>();
         this.pileWorkers = new ArrayList<>();
         this.workersOutside = new ArrayList<>();
         this.pileApprentice = new ArrayList<>();
-        initializeCards("../../data/Cartes.txt");
+        initializeCards("../data/Cartes.txt");
         this.random = new Random();
     }
 
     /**
-     * Displays the board at the moment (stats, cards ...)
+     * Modify the number of ecu in the reserve
      *
-     * @return board abstract
+     * @param ecuReserve New number of ecu
      */
-    public String printBoard() {
-        return "";
+    public void setEcuReserve(int ecuReserve) {
+        if (ecuReserve >= 0) {
+            this.ecuReserve = ecuReserve;
+        } else {
+            System.err.println("ERREUR setEcuReserve : nouvelle valeur inférieur à 0");
+        }
+    }
+
+    /**
+     * Returns the number of ecu in the reserve
+     *
+     * @return Number of ecu
+     */
+    public int getEcuReserve() {
+        return this.ecuReserve;
     }
 
     /**
@@ -71,31 +82,15 @@ public class Board {
                     Building BuildingCard = new Building(this.sc);
                     this.pileBuildings.add(BuildingCard);
                 }
-                sc.nextLine();
             }
         } catch (FileNotFoundException e) {
             System.err.println("ERREUR initializeCards : Fichier non trouve : " + fileName);
+            System.exit(1);
         }
     }
 
     /**
-     * Take cards from the piles and fill them in the rows if there are missing cards
-     */
-    public void completeLineCard() {
-        int counterWorker = 5 - this.workersOutside.size();
-        if (this.workersOutside.size() < 5 && this.pileWorkers.size() >= counterWorker) {
-            for (int i = this.workersOutside.size(); i <= 5; i++) {
-                int pickRandom = this.random.nextInt(this.pileWorkers.size() - 1);
-                this.workersOutside.add(this.pileWorkers.get(pickRandom));
-                this.pileWorkers.remove(pickRandom);
-            }
-        } else {
-            System.out.println("Pile de carte Ouvrier vide");
-        }
-    }
-
-    /**
-     * Retrieve a construction site among the proposed constrcution sites and put a card back in the construction site line
+     * Retrieve a construction site among the proposed construction sites and put a card back in the construction site line
      *
      * @param indexOfConstruction Index of the construction site in the list
      * @return Card chosen by the user
@@ -112,7 +107,7 @@ public class Board {
                 System.out.println("Pile de carte Bâtiment vide");
             }
         } else {
-            System.err.println("ERREUR takeConstruction : index de la carte choisi en dehors du tableau");
+            System.err.println("/!\\ Aucun chantier trouvé avec l'index saisie /!\\");
         }
         return card;
     }
@@ -135,11 +130,14 @@ public class Board {
                 System.out.println("Pile de carte Ouvrier vide");
             }
         } else {
-            System.err.println("ERREUR takeWorker : index de la carte choisi en dehors du tableau");
+            System.err.println("/!\\ Aucun ouvrier trouvé avec l'index saisie /!\\");
         }
         return card;
     }
 
+    /**
+     * Put the remaining apprentices in the worker stack
+     */
     public void assembleWorker() {
         for (int i = 0; i < this.pileApprentice.size(); i++) {
             this.pileWorkers.add(this.pileApprentice.get(i));
@@ -147,6 +145,11 @@ public class Board {
         }
     }
 
+    /**
+     * Retrieve a random apprentice from the apprentice list
+     *
+     * @return An apprentice
+     */
     public Apprentice randomDetributeApprentices() {
         int random = this.random.nextInt(this.pileApprentice.size() - 1);
         Apprentice apprenticeOfPlayer = this.pileApprentice.get(random);
@@ -154,10 +157,20 @@ public class Board {
         return apprenticeOfPlayer;
     }
 
+    /**
+     * Get the list of buildings
+     *
+     * @return Building list
+     */
     public ArrayList<Cards> getBuildingsOutside() {
         return this.buildingsOutside;
     }
 
+    /**
+     * Get the list of workers
+     *
+     * @return Workers list
+     */
     public ArrayList<Cards> getWorkersOutside() {
         return this.workersOutside;
     }
