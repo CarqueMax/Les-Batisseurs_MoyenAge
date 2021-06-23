@@ -1,6 +1,8 @@
 import game.Difficulties;
 import game.Game;
+import util.Save;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,7 +18,7 @@ public class GameLauncher {
      *
      * @param args Default argument
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println("" +
                 "  _                ____        _   _                                   __  __                                _              \n" +
                 " | |    ___  ___  | __ )  __ _| |_(_)___ ___  ___ _   _ _ __ ___   _  |  \\/  | ___  _   _  ___ _ __         / \\   __ _  ___ \n" +
@@ -26,6 +28,35 @@ public class GameLauncher {
                 "                                                                                    |___/                        |___/      \n"
         );
         System.out.println("====================================================================================");
+
+        System.out.println("0. Nouvelle Partie\n1. Reprendre une partie");
+        Scanner scan = new Scanner(System.in);
+        int choice = 0;
+        boolean saisie = false;
+        do {
+            if (scan.hasNextInt()) {
+                choice = scan.nextInt();
+                saisie = true;
+            } else {
+                scan.next();
+                System.err.println("Entrer un nombre entier, recommencez :");
+            }
+        } while (choice < 0 || choice > 1 || !saisie);
+
+        switch (choice) {
+            case 0:
+                newGame();
+                break;
+            case 1:
+                loadGame();
+                break;
+        }
+    }
+
+    /**
+     * Start a new game
+     */
+    public static void newGame() {
         ArrayList<String> playerNameList = new ArrayList<>();
         ArrayList<Difficulties> difficultyOfRobot = new ArrayList<>();
         int numberOfHumanPlayer = 0;
@@ -62,7 +93,7 @@ public class GameLauncher {
         if (numberOfHumanPlayer > 0) {
             for (int i = 1; i <= numberOfHumanPlayer; i++) {
                 System.out.println("===> Entrer le nom du joueur humain " + i);
-                String nameOfHumanPlayer = scan.nextLine();
+                String nameOfHumanPlayer = scan.next();
                 playerNameList.add(nameOfHumanPlayer);
             }
         }
@@ -113,6 +144,18 @@ public class GameLauncher {
         System.out.println("====================================================================================");
 
         Game game = new Game(playerNameList, difficultyOfRobot, numberOfHumanPlayer, numberOfAutoPlayer);
+        game.start();
+    }
+
+    /**
+     * Load a game
+     */
+    public static void loadGame() throws IOException, ClassNotFoundException {
+        System.out.println("Entrer le chemin du fichier :");
+        Scanner scan = new Scanner(System.in);
+        String saveName = scan.next();
+        Save save = new Save(saveName);
+        Game game = save.loadGame(saveName);
         game.start();
     }
 }

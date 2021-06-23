@@ -3,6 +3,7 @@ package game;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -12,7 +13,7 @@ import java.util.Random;
  * @author CHARGÉ Maxime - IUT Vannes
  * @version 1.0
  */
-public class Game implements IGame {
+public class Game implements IGame, Serializable {
     private ArrayList<Player> playerList;
     private Board board;
     private int currentPlayerId;
