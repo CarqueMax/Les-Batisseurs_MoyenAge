@@ -126,6 +126,8 @@ public abstract class Player {
 
     /**
      * Convert ecu into action (5 ecus = 1 action)
+     *
+     * @param numberAction Number of action
      */
     public void buyAction(int numberAction) {
         if (numberAction > 0) {

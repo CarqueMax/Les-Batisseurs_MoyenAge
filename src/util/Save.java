@@ -14,7 +14,7 @@ public class Save {
     private String fileName;
 
     public Save(String fileName) {
-        if(fileName != null) {
+        if (fileName != null) {
             this.fileName = fileName;
         } else {
             System.err.println("ERREUR Save : fileName null");
@@ -25,6 +25,7 @@ public class Save {
      * Save a game to a file
      *
      * @param fileName Backup file name
+     * @throws IOException IOException
      */
     public void saveGame(String fileName) throws IOException {
         if (fileName != null) {
@@ -41,6 +42,8 @@ public class Save {
      *
      * @param fileName Backup file name
      * @return game load
+     * @throws IOException            IOException
+     * @throws ClassNotFoundException ClassNotFoundException
      */
     public Game loadGame(String fileName) throws IOException, ClassNotFoundException {
         Game gameLoad = null;

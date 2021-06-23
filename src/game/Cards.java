@@ -1,6 +1,7 @@
 package game;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -21,6 +22,7 @@ public abstract class Cards {
      * Cards constructor
      *
      * @param scanOfBoard Board class scanner that reads the file
+     * @throws FileNotFoundException FileNotFoundException
      */
     public Cards(Scanner scanOfBoard) throws FileNotFoundException {
         try {

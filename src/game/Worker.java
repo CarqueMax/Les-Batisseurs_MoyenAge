@@ -14,6 +14,7 @@ public class Worker extends Cards {
      * Worker constructor
      *
      * @param scanOfBoard Board class scanner that reads the file
+     * @throws FileNotFoundException FileNotFoundException
      */
     public Worker(Scanner scanOfBoard) throws FileNotFoundException {
         super(scanOfBoard);

@@ -17,6 +17,8 @@ public class GameLauncher {
      * Starts game startup (configuration, parameter, game)
      *
      * @param args Default argument
+     * @throws IOException            IOException
+     * @throws ClassNotFoundException ClassNotFoundException
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println("" +
@@ -149,6 +151,9 @@ public class GameLauncher {
 
     /**
      * Load a game
+     *
+     * @throws IOException            IOException
+     * @throws ClassNotFoundException ClassNotFoundException
      */
     public static void loadGame() throws IOException, ClassNotFoundException {
         System.out.println("Entrer le chemin du fichier :");
